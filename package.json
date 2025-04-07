@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.9"
+  },
+  "dependencies": {
+    "dom": "^0.0.3",
+    "react-router": "^7.5.0"
+  }
+}
