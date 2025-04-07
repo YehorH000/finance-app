@@ -142,8 +142,8 @@ export default function Dashboard() {
 
         try {
             const url = editMode
-                ? `http://localhost:5000/api/transactions/${editTxId}`
-                : 'http://localhost:5000/api/transactions'
+                ? `${process.env.REACT_APP_API_URL}/transactions/${editTxId}`
+                : `${process.env.REACT_APP_API_URL}/transactions`
 
             const method = editMode ? 'PUT' : 'POST'
 
