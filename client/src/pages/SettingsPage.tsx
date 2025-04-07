@@ -36,7 +36,7 @@ export default function SettingsPage() {
         try {
             setIsLoading(true)
 
-            const res = await fetch('http://localhost:5000/api/user', {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/user`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,14 +65,17 @@ export default function SettingsPage() {
         try {
             setIsLoading(true)
 
-            const res = await fetch('http://localhost:5000/api/user/password', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ password }),
-            })
+            const res = await fetch(
+                `${process.env.REACT_APP_API_URL}/password`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ password }),
+                }
+            )
 
             const data = await res.json()
             if (!res.ok)
@@ -97,7 +100,7 @@ export default function SettingsPage() {
         try {
             setIsLoading(true)
 
-            const res = await fetch('http://localhost:5000/api/user', {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/user`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`,

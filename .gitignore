@@ -11,8 +11,8 @@ server/.env
 
 # === Build output ===
 dist/
-build/
-client/build/
+# build/
+# client/build/
 server/dist/
 
 # === Logs ===

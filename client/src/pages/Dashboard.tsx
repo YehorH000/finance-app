@@ -122,7 +122,7 @@ export default function Dashboard() {
     useEffect(() => {
         if (!token) return
 
-        fetch('http://localhost:5000/api/transactions', {
+        fetch(`${process.env.REACT_APP_API_URL}/transactions`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
@@ -185,7 +185,7 @@ export default function Dashboard() {
     const handleDelete = async (id: string) => {
         try {
             const res = await fetch(
-                `http://localhost:5000/api/transactions/${id}`,
+                `${process.env.REACT_APP_API_URL}/transactions/${id}`,
                 {
                     method: 'DELETE',
                     headers: { Authorization: `Bearer ${token}` },
