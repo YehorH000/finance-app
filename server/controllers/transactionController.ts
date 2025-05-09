@@ -7,7 +7,14 @@ export const addTransaction = async (
     res: Response
 ): Promise<void> => {
     try {
-        const { amount, type, category, date } = req.body
+        const { amount, type, category, date, description } = req.body
+
+        if (!amount || typeof amount !== 'number' || amount <= 0) {
+            res.status(400).json({
+                message: 'Amount must be a positive number',
+            })
+            return
+        }
 
         if (!amount || !type || !category || !date) {
             res.status(400).json({ message: 'All rows are required' })
@@ -19,6 +26,7 @@ export const addTransaction = async (
             type,
             category,
             date,
+            description: description || '',
             user: req.userId,
         })
 

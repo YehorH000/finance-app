@@ -14,7 +14,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import SettingsPage from './pages/SettingsPage'
 import AppLogo from './components/AppLogo'
-
+import TwoFactorSetup from './pages/TwoFactorSetup'
+import TwoFactorLogin from './pages/TwoFactorLogin'
+import OAuthSuccessHandler from './pages/OAuthSuccessHandler'
 function App() {
     return (
         <Router>
@@ -40,6 +42,13 @@ function App() {
                             <SettingsPage />
                         </PrivateRoute>
                     }
+                />
+                <Route path="/2fa" element={<TwoFactorLogin />} />
+                <Route path="/2fa-setup" element={<TwoFactorSetup />} />
+                {/* <Route path="/oauth/callback" element={<OAuthCallbackPage />} /> */}
+                <Route
+                    path="/oauth-success"
+                    element={<OAuthSuccessHandler />}
                 />
             </Routes>
         </Router>

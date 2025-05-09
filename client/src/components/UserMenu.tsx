@@ -3,6 +3,7 @@ import { useUser } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import { FiUser, FiSettings, FiLogOut } from 'react-icons/fi'
 import { useTheme } from '@mui/material'
+import Divider from '@mui/material/Divider'
 
 export default function UserMenu() {
     const { user, setUser } = useUser()
@@ -103,6 +104,7 @@ export default function UserMenu() {
                         <UserIcon style={{ marginRight: 8 }} />
                         {user.name}
                     </div>
+                    <Divider sx={{ my: 1 }} />
                     <div
                         onClick={() => {
                             setOpen(false)

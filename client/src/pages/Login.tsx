@@ -14,6 +14,7 @@ import {
 export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const navigate = useNavigate()
     const { setUser } = useUser()
@@ -22,16 +23,25 @@ export default function Login() {
         e.preventDefault()
 
         try {
-            const res = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            })
+            const res = await fetch(
+                `${process.env.REACT_APP_API_URL}/auth/login`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                }
+            )
 
             const data = await res.json()
 
             if (!res.ok) {
                 setError(data.message || 'Login failed')
+                return
+            }
+
+            if (res.status === 206) {
+                localStorage.setItem('pendingUserId', data.userId)
+                navigate('/2fa')
                 return
             }
 
@@ -79,13 +89,36 @@ export default function Login() {
                     <Button
                         type="submit"
                         variant="contained"
-                        fullWidth
                         color="primary"
-                        sx={{ mt: 2 }}
+                        fullWidth
+                        disabled={loading}
                     >
-                        Log In
+                        {loading ? 'Logging in...' : 'Login'}
                     </Button>
                 </form>
+
+                <Button
+                    variant="outlined"
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    onClick={() => {
+                        const googleClientId =
+                            process.env.REACT_APP_GOOGLE_CLIENT_ID
+                        const redirectUri =
+                            'http://localhost:5000/api/auth/google/callback'
+
+                        const scope =
+                            'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
+
+                        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=${encodeURIComponent(
+                            scope
+                        )}&access_type=offline&prompt=consent`
+
+                        window.location.href = authUrl
+                    }}
+                >
+                    Sign in with Google
+                </Button>
 
                 <Box mt={2} textAlign="center">
                     <Link href="/" underline="hover">

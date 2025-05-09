@@ -1,14 +1,11 @@
-import { Navigate } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
-import React, { JSX } from 'react';
-
+import { Navigate } from 'react-router-dom'
 
 export default function PrivateRoute({ children }: { children: JSX.Element }) {
-  const { user } = useUser();
+    const token = localStorage.getItem('token')
 
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
+    if (!token) {
+        return <Navigate to="/login" />
+    }
 
-  return children;
+    return children
 }

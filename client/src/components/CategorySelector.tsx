@@ -53,6 +53,8 @@ export default function CategorySelector({
                 updated.filter((cat) => !defaultCategories.includes(cat))
             )
         )
+        onChange(trimmed)
+        setInputValue(trimmed)
         setShowSave(false)
     }
 

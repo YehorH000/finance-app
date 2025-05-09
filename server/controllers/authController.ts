@@ -53,9 +53,22 @@ export const loginUser = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'User is not found' })
         }
 
+        if (!user.password) {
+            return res
+                .status(400)
+                .json({ message: 'This account uses Google login only' })
+        }
+
         const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) {
             return res.status(401).json({ message: 'Password is incorrect' })
+        }
+
+        if (user.isTwoFactorEnabled) {
+            return res.status(206).json({
+                message: '2FA required',
+                userId: user._id,
+            })
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
@@ -86,7 +99,7 @@ export const getCurrentUser = async (
         if (!user) {
             return res.status(404).json({ message: 'Пользователь не найден' })
         }
-        res.json(user)
+        res.json({ user })
     } catch (error) {
         console.error('Ошибка получения текущего пользователя:', error)
         res.status(500).json({ message: 'Ошибка сервера' })

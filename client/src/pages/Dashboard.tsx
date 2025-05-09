@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Box, Button } from '@mui/material'
 import { useUser } from '../context/UserContext'
 import { toast } from 'react-toastify'
 import { confirmAlert } from 'react-confirm-alert'
@@ -12,6 +13,9 @@ import TransactionList from '../components/TransactionList'
 import { TransactionFormData } from '../types'
 import AddTransactionWidget from '../components/AddTransactionWidget'
 import EditTransactionModal from '../components/EditTransactionModal'
+import Loader from '../components/Loader'
+import AdvancedTransactionModal from '../components/AdvancedTransactionModal'
+import TransactionDetailsModal from '../components/TransactionDetailsModal'
 
 interface Transaction {
     _id: string
@@ -25,6 +29,12 @@ export default function Dashboard() {
     const { user } = useUser()
     const [transactions, setTransactions] = useState<Transaction[]>([])
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(true)
+
+    const [showForm, setShowForm] = useState(false)
+
+    const [advancedOpen, setAdvancedOpen] = useState(false)
+
     // const [chartType, setChartType] = useState<'pie' | 'line'>('pie')
     // const [pieMode, setPieMode] = useState<'income' | 'expense'>('income')
     const [form, setForm] = useState<TransactionFormData>({
@@ -46,6 +56,17 @@ export default function Dashboard() {
     const isFormDirty = !!form.amount || !!form.category || !!form.date
 
     const now = new Date()
+
+    const [detailsOpen, setDetailsOpen] = useState(false)
+    const [selectedTransaction, setSelectedTransaction] = useState<any | null>(
+        null
+    )
+
+    const handleViewDetails = (tx: any) => {
+        setSelectedTransaction(tx)
+        setDetailsOpen(true)
+        console.log('Transaction details:', tx)
+    }
 
     const isSameWeek = (date: Date) => {
         const dayOfWeek = now.getDay()
@@ -122,12 +143,14 @@ export default function Dashboard() {
     useEffect(() => {
         if (!token) return
 
+        setLoading(true)
         fetch(`${process.env.REACT_APP_API_URL}/transactions`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
             .then((data) => setTransactions(data))
             .catch(() => setError('Can not fetch transactions'))
+            .finally(() => setLoading(false))
     }, [])
 
     const handleChange = (
@@ -170,7 +193,7 @@ export default function Dashboard() {
                     )
                 )
             } else {
-                setTransactions((prev) => [data.transaction, ...prev])
+                setTransactions((prev) => [data.transaction, ...prev]) // Add new transaction to the state
             }
 
             setForm({ amount: '', type: 'expense', category: '', date: '' })
@@ -258,25 +281,64 @@ export default function Dashboard() {
 
             <BalanceSummary transactions={filteredTransactions} />
 
-            <div id="transaction-form">
-                <TransactionForm
-                    formData={form}
-                    setFormData={setForm}
-                    editMode={editMode}
-                    editTxId={editTxId}
-                    onSubmit={handleSubmit}
-                    onCancelEdit={() => {
-                        setEditMode(false)
-                        setEditTxId(null)
-                        setForm({
-                            amount: '',
-                            type: 'expense',
-                            category: '',
-                            date: '',
-                        })
-                    }}
-                />
-            </div>
+            <Box id="transaction-form" mb={3}>
+                {!showForm ? (
+                    <>
+                        <Button
+                            variant="contained"
+                            onClick={() => setShowForm(true)}
+                            fullWidth
+                        >
+                            + Add Transaction
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <Box display="flex" justifyContent="flex-end">
+                            <Button
+                                size="small"
+                                onClick={() => {
+                                    setForm({
+                                        amount: '',
+                                        type: 'expense',
+                                        category: '',
+                                        date: '',
+                                    })
+                                    setShowForm(false)
+                                    setEditMode(false)
+                                    setEditTxId(null)
+                                }}
+                                sx={{ mb: 1, textTransform: 'none' }}
+                            >
+                                ✕ Close
+                            </Button>
+                        </Box>
+
+                        <TransactionForm
+                            formData={form}
+                            setFormData={setForm}
+                            editMode={editMode}
+                            editTxId={editTxId}
+                            onSubmit={handleSubmit}
+                            onCancelEdit={() => {
+                                setEditMode(false)
+                                setEditTxId(null)
+                                setForm({
+                                    amount: '',
+                                    type: 'expense',
+                                    category: '',
+                                    date: '',
+                                })
+                                setShowForm(false)
+                            }}
+                            onOpenAdvanced={() => setAdvancedOpen(true)}
+                            onAddTransaction={(newTx) => {
+                                setTransactions((prev) => [newTx, ...prev]) // Update transactions state
+                            }}
+                        />
+                    </>
+                )}
+            </Box>
 
             <FilterSelector
                 filterMode={filterMode}
@@ -305,14 +367,20 @@ export default function Dashboard() {
 
             {chartMode === 'line' && <LineChartComponent lineData={lineData} />}
 
-            <h3>Your Transactions:</h3>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-
-            <TransactionList
-                transactions={filteredTransactions}
-                onEdit={handleEdit}
-                onDelete={confirmDelete}
-            />
+            {loading ? (
+                <Loader />
+            ) : (
+                <>
+                    <h3>Your Transactions:</h3>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    <TransactionList
+                        transactions={filteredTransactions}
+                        onEdit={handleEdit}
+                        onDelete={confirmDelete}
+                        onViewDetails={handleViewDetails}
+                    />
+                </>
+            )}
 
             <AddTransactionWidget
                 onSubmit={handleSubmit}
@@ -338,6 +406,12 @@ export default function Dashboard() {
                         date: '',
                     })
                 }}
+            />
+
+            <TransactionDetailsModal
+                open={detailsOpen}
+                onClose={() => setDetailsOpen(false)}
+                transaction={selectedTransaction}
             />
         </div>
     )

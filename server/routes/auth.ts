@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import {
     registerUser,
     loginUser,
@@ -8,6 +8,13 @@ import {
     deleteUserAccount,
 } from '../controllers/authController'
 import { protect } from '../middlewares/authMiddleware'
+import {
+    generate2FA,
+    verify2FA,
+    verifyAndEnable2FA,
+} from '../controllers/twoFactorController'
+import User from '../models/User'
+import { googleOAuthCallback } from '../controllers/oauthController'
 
 const router = express.Router()
 
@@ -29,14 +36,14 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.get('/me', protect, async (req, res) => {
-    try {
-        await getCurrentUser(req, res) // Ensure getCurrentUser is an async function if it performs async operations
-    } catch (error) {
-        console.error('Error in /me route:', error)
-        res.status(500).json({ message: 'Internal Server Error' })
-    }
-})
+// router.get('/me', protect, async (req, res) => {
+//     try {
+//         await getCurrentUser(req, res) // Ensure getCurrentUser is an async function if it performs async operations
+//     } catch (error) {
+//         console.error('Error in /me route:', error)
+//         res.status(500).json({ message: 'Internal Server Error' })
+//     }
+// })
 
 router.put('/user', protect, async (req, res) => {
     try {
@@ -56,5 +63,41 @@ router.patch('/user/password', protect, async (req, res) => {
     }
 })
 router.delete('/user', protect, deleteUserAccount)
+
+router.post('/2fa/generate', generate2FA)
+router.post('/2fa/verify', verify2FA)
+router.post('/2fa/disable', protect, async (req: Request, res: Response) => {
+    const user = await User.findById((req as any).userId)
+    if (!user) {
+        res.status(404).json({ message: 'User not found' })
+        return
+    }
+
+    user.isTwoFactorEnabled = false
+    user.twoFactorSecret = ''
+    await user.save()
+
+    res.json({ message: '2FA disabled' })
+})
+
+router.get('/me', protect, async (req: Request, res: Response) => {
+    const user = await User.findById((req as any).userId)
+    if (!user) {
+        res.status(404).json({ message: 'User not found' })
+        return
+    }
+
+    res.json({
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            isTwoFactorEnabled: user.isTwoFactorEnabled,
+        },
+    })
+})
+router.post('/2fa/enable', protect, verifyAndEnable2FA)
+
+router.get('/google/callback', googleOAuthCallback)
 
 export default router

@@ -102,6 +102,29 @@ export default function Register() {
                     </Button>
                 </form>
 
+                <Button
+                    variant="outlined"
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    onClick={() => {
+                        const googleClientId =
+                            process.env.REACT_APP_GOOGLE_CLIENT_ID
+                        const redirectUri =
+                            'http://localhost:5000/api/auth/google/callback'
+
+                        const scope =
+                            'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
+
+                        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=${encodeURIComponent(
+                            scope
+                        )}&access_type=offline&prompt=consent`
+
+                        window.location.href = authUrl
+                    }}
+                >
+                    Sign up with Google
+                </Button>
+
                 <Box mt={2} textAlign="center">
                     <Link href="/" underline="hover">
                         ← Back to Home

@@ -15,14 +15,19 @@ interface Props {
     transactions: Transaction[]
     onEdit: (tx: Transaction) => void
     onDelete: (id: string) => void
+    onViewDetails: (tx: Transaction) => void
 }
 
 export default function TransactionList({
     transactions,
     onEdit,
     onDelete,
+    onViewDetails,
 }: Props) {
     const currency = useCurrency()
+
+    console.log('Transactions:', transactions)
+
     if (transactions.length === 0) {
         return (
             <Typography variant="body1" textAlign="center" mt={2}>
@@ -42,6 +47,7 @@ export default function TransactionList({
                     <Paper
                         key={tx._id}
                         elevation={2}
+                        onClick={() => onViewDetails(tx)}
                         sx={{
                             p: 2,
                             display: 'flex',
