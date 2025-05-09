@@ -22,7 +22,9 @@ export const googleOAuthCallback = async (
                 code,
                 client_id: process.env.GOOGLE_CLIENT_ID,
                 client_secret: process.env.GOOGLE_CLIENT_SECRET,
-                redirect_uri: 'http://localhost:5000/api/auth/google/callback', // <-- fix
+                // redirect_uri: 'http://localhost:5000/api/auth/google/callback', // <-- fix
+                redirect_uri:
+                    'https://finance-app-client-usqr.onrender.com/api/auth/google/callback', // <-- fix
                 grant_type: 'authorization_code',
             }),
             { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
@@ -54,7 +56,10 @@ export const googleOAuthCallback = async (
             expiresIn: '1d',
         })
 
-        res.redirect(`http://localhost:3000/oauth-success?token=${token}`)
+        // res.redirect(`http://localhost:3000/oauth-success?token=${token}`)
+        res.redirect(
+            `https://finance-app-client-usqr.onrender.com/oauth-success?token=${token}`
+        )
     } catch (err) {
         console.error('OAuth error:', err)
         res.status(500).json({

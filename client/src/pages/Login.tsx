@@ -104,8 +104,11 @@ export default function Login() {
                     onClick={() => {
                         const googleClientId =
                             process.env.REACT_APP_GOOGLE_CLIENT_ID
+                        // const redirectUri =
+                        //     'http://localhost:5000/api/auth/google/callback'
+
                         const redirectUri =
-                            'http://localhost:5000/api/auth/google/callback'
+                            'https://finance-app-client-usqr.onrender.com/api/auth/google/callback'
 
                         const scope =
                             'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
