@@ -7,8 +7,9 @@ export default function OAuthSuccessHandler() {
     const { fetchUser } = useUser()
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search)
-        const token = params.get('token')
+        const urlParams = new URLSearchParams(window.location.search)
+        const token = urlParams.get('token')
+
         if (token) {
             localStorage.setItem('token', token)
             fetchUser().then(() => {
