@@ -24,7 +24,7 @@ export const googleOAuthCallback = async (
                 client_secret: process.env.GOOGLE_CLIENT_SECRET,
                 // redirect_uri: 'http://localhost:5000/api/auth/google/callback', // <-- fix
                 redirect_uri:
-                    'https://finance-app-client-usqr.onrender.com/api/auth/google/callback', // <-- fix
+                    'https://finance-app-backend-5fja.onrender.com/api/auth/google/callback', // <-- fix
                 grant_type: 'authorization_code',
             }),
             { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }

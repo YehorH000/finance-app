@@ -108,7 +108,7 @@ export default function Login() {
                         //     'http://localhost:5000/api/auth/google/callback'
 
                         const redirectUri =
-                            'https://finance-app-client-usqr.onrender.com/api/auth/google/callback'
+                            'https://finance-app-backend-5fja.onrender.com/api/auth/google/callback'
 
                         const scope =
                             'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
