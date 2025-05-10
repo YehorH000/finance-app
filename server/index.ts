@@ -28,7 +28,7 @@ app.use(
 
 app.use(
     cors({
-        origin: ['https://finance-app-backend-5fja.onrender.com'],
+        origin: ['https://finance-app-client-usqr.onrender.com'],
         credentials: true,
     })
 )
