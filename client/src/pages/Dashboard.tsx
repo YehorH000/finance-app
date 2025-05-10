@@ -163,6 +163,18 @@ export default function Dashboard() {
         e.preventDefault()
         if (!token) return
 
+        if (
+            !form.amount ||
+            isNaN(Number(form.amount)) ||
+            Number(form.amount) <= 0 ||
+            !form.category ||
+            !form.date ||
+            !form.type
+        ) {
+            toast.error('Please fill in all fields correctly')
+            return
+        }
+
         try {
             const url = editMode
                 ? `${process.env.REACT_APP_API_URL}/transactions/${editTxId}`
@@ -176,7 +188,10 @@ export default function Dashboard() {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(form),
+                body: JSON.stringify({
+                    ...form,
+                    amount: Number(form.amount), // ключевой фикс
+                }),
             })
 
             const data = await res.json()
@@ -193,7 +208,7 @@ export default function Dashboard() {
                     )
                 )
             } else {
-                setTransactions((prev) => [data.transaction, ...prev]) // Add new transaction to the state
+                setTransactions((prev) => [data.transaction, ...prev])
             }
 
             setForm({ amount: '', type: 'expense', category: '', date: '' })
