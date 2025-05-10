@@ -90,10 +90,19 @@ export default function AdvancedTransactionModal({
     const handleSubmit = async () => {
         const { amount, category, date, type, description } = formData
 
-        // Ensure amount is a valid positive number
+        if (!amount || amount.trim() === '') {
+            alert('Amount is required.')
+            return
+        }
+
         const parsedAmount = parseFloat(amount)
         if (isNaN(parsedAmount) || parsedAmount <= 0) {
             alert('Amount must be a positive number.')
+            return
+        }
+
+        if (!category) {
+            alert('Category is required.')
             return
         }
 

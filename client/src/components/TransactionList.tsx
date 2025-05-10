@@ -47,7 +47,6 @@ export default function TransactionList({
                     <Paper
                         key={tx._id}
                         elevation={2}
-                        onClick={() => onViewDetails(tx)}
                         sx={{
                             p: 2,
                             display: 'flex',
@@ -55,7 +54,7 @@ export default function TransactionList({
                             alignItems: 'center',
                         }}
                     >
-                        <Box>
+                        <Box onClick={() => onViewDetails(tx)}>
                             <Typography variant="subtitle1" fontWeight={600}>
                                 {tx.category}
                             </Typography>
