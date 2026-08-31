@@ -18,16 +18,30 @@ A modern fullstack application for tracking personal finances. Built as a Bachel
 
 ## 🚀 Live Demo
 
-### 🔗 [Frontend on Render](https://finance-app-client-usqr.onrender.com)
-
-### 📁 [Backend on Render](https://finance-app-backend-5fja.onrender.com)
-
-### Click below to try the live application:
+Click below to open and test the live application:
 
 👉 **[Launch Finance App (Live Demo)](https://finance-app-client-usqr.onrender.com)**
 
-> ⏳ **Note:** The app is hosted on Render's free tier. If the app hasn't been accessed recently, the server needs to "wake up", which may take **1-2 minutes** on the initial load. Please be patient!
+> ⏳ **Note:** Hosted on Render's free tier. If the server is asleep, the initial load may take **30–50 seconds** while it wakes up. Thanks for your patience!
 
+---
+
+### 🔑 Demo Account & Login Options
+
+You can test the application in two ways:
+
+1. **Use the pre-filled Demo Account** (recommended to explore existing charts & transaction data right away):
+   - **Email:** `yhrhrbn@gmail.com`
+   - **Password:** `123456`
+
+2. **Create your own fresh account:**
+   - Register a new account manually with your email.
+   - Or sign in quickly via **Google OAuth**.
+
+---
+
+### 🔗 API Endpoints
+- **Backend API Base URL:** [https://finance-app-backend-5fja.onrender.com](https://finance-app-backend-5fja.onrender.com)
 ---
 
 ## 🛠️ Tech Stack
