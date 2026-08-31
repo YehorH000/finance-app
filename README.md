@@ -22,6 +22,12 @@ A modern fullstack application for tracking personal finances. Built as a Bachel
 
 ### 📁 [Backend on Render](https://finance-app-backend-5fja.onrender.com)
 
+### Click below to try the live application:
+
+👉 **[Launch Finance App (Live Demo)](https://finance-app-client-usqr.onrender.com)**
+
+> ⏳ **Note:** The app is hosted on Render's free tier. If the app hasn't been accessed recently, the server needs to "wake up", which may take **1-2 minutes** on the initial load. Please be patient!
+
 ---
 
 ## 🛠️ Tech Stack
